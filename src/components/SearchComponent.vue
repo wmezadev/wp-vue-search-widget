@@ -2,7 +2,7 @@
   <section class="container">
     <div class="row">
         <div class="col col-md-4">
-          <input class="form-control" type="text" name="search" placeholder="Búsqueda">
+          <input class="form-control" v-model="search"  type="text" name="search" placeholder="Búsqueda">
         </div>
         <div class="col col-md-4">
           <select class="form-control" name="category">
@@ -19,106 +19,16 @@
               <h3>Resultados</h3>
               <div class="row">
                   <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
+                  <div class="col-xs-12 col-sm-6 col-md-4" v-for="(post, index) in filteredList" v-bind:key="index">
                       <div class="image-flip">
                           <div class="mainflip">
                               <div class="frontside">
                                   <div class="card">
                                       <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_01.png" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button. asdsadsadasdsasa asdsadsadsa asdsa</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- ./individual search result -->
-                  <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                      <div class="image-flip">
-                          <div class="mainflip">
-                              <div class="frontside">
-                                  <div class="card">
-                                      <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_02.png" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button.</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- ./individual search result -->
-                  <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                      <div class="image-flip">
-                          <div class="mainflip">
-                              <div class="frontside">
-                                  <div class="card">
-                                      <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_03.png" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button.</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- ./individual search result -->
-                  <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                      <div class="image-flip">
-                          <div class="mainflip">
-                              <div class="frontside">
-                                  <div class="card">
-                                      <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_04.jpg" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button.</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- ./individual search result -->
-                  <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                      <div class="image-flip">
-                          <div class="mainflip">
-                              <div class="frontside">
-                                  <div class="card">
-                                      <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_05.png" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button.</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- ./individual search result -->
-                  <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                      <div class="image-flip">
-                          <div class="mainflip">
-                              <div class="frontside">
-                                  <div class="card">
-                                      <div class="card-body text-center">
-                                          <p><img class=" img-fluid" src="https://sunlimetech.com/portfolio/boot4menu/assets/imgs/team/img_06.jpg" alt="card image"></p>
-                                          <h4 class="card-title">Sunlimetech</h4>
-                                          <p class="card-text">This is basic card with image on top, title, description and button.</p>
-                                          <a href="#" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
+                                          <p><img class=" img-fluid" v-bind:src="post.img" alt="card image"></p>
+                                          <h4 class="card-title">{{ post.title }}</h4>
+                                          <p class="card-text">{{ post.author }}</p>
+                                          <a v-bind:href="post.link" target="_blank" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
                                       </div>
                                   </div>
                               </div>
@@ -135,7 +45,14 @@
 </template>
 
 <script>
-
+class Post {
+  constructor(title, link, author, img) {
+    this.title = title;
+    this.link = link;
+    this.author = author;
+    this.img = img;
+  }
+}
 export default {
   name: 'search-component',
   props: {
@@ -143,8 +60,71 @@ export default {
   },
   data: function () {
     return { 
-        
+        search: '',
+        postList : [
+          new Post(
+            'Vue.js', 
+            'https://vuejs.org/', 
+            'Chris', 
+            'https://vuejs.org//images/logo.png'
+          ),
+          new Post(
+            'React.js', 
+            'https://facebook.github.io/react/', 
+            'Tim',
+            'https://daynin.github.io/clojurescript-presentation/img/react-logo.png'
+          ),
+          new Post(
+            'Angular.js', 
+            'https://angularjs.org/', 
+            'Sam', 
+            'https://angularjs.org/img/ng-logo.png'
+          ),
+          new Post(
+            'Ember.js', 
+            'http://emberjs.com/', 
+            'Rachel',
+            'http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=200'
+          ),
+          new Post(
+            'Meteor.js', 
+            'https://www.meteor.com/', 
+            'Chris', 
+            'http://hacktivist.in/introduction-to-nodejs-mongodb-meteor/img/meteor.png'
+          ),
+          new Post(
+            'Aurelia', 
+            'http://aurelia.io/', 
+            'Tim',
+            'https://cdn.auth0.com/blog/aurelia-logo.png'
+          ),
+          new Post(
+            'Node.js', 
+            'https://nodejs.org/en/', 
+            'A. A. Ron',
+            'https://code-maven.com/img/node.png'
+          ),
+          new Post(
+            'Pusher', 
+            'https://pusher.com/', 
+            'Alex', 
+            'https://avatars1.githubusercontent.com/u/739550?v=3&s=400'
+          ),
+          new Post(
+            'Feathers.js', 
+            'http://feathersjs.com/', 
+            'Chuck',
+            'https://cdn.worldvectorlogo.com/logos/feathersjs.svg'
+          )
+        ]
       }
+  },
+  computed: {
+    filteredList() {
+      return this.postList.filter(post => {
+        return post.title.toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
   }
 }
 </script>
