@@ -4,20 +4,23 @@
       <section id="results" class="pb-5">
           <div class="container display-flex">
               <div class="row">
-                  <div class="col col-md-4">
-                    <input class="form-control" v-model="search"  type="text" name="search" placeholder="Búsqueda por titulo">
-                  </div>
-                  <div class="col col-md-4">
-                    <select class="form-control" name="category" v-model="category">
-                      <option value="" disabled selected>  Categoría </option>
-                      <option v-for="category in categories" v-bind:key="category.id" v-bind:value="category.id">{{category.name}}</option>
-                    </select>
-                  </div>
-                  <div class="col col-md-4 text-center">
-                    <button class="btn btn-md btn-primary" @click="searchPosts()">Buscar</button>
-                  </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <form class="form-inline" id="search-form" @submit="searchPosts">
+                    <div class="form-group">
+                      <label class="sr-only" for="search">Ingrese el título</label>
+                      <input class="form-control" v-model="search"  type="text" name="search" id="search" placeholder="Búsqueda por titulo">
+                    </div>
+                    <div class="form-group">
+                      <label class="sr-only" for="category"> Seleccione una categoría</label>
+                      <select class="form-control" name="category" id="category" v-model="category">
+                        <option value="" selected>  -- seleccionar categoría -- </option>
+                        <option v-for="category in categories" v-bind:key="category.id" v-bind:value="category.id">{{category.name}}</option>
+                      </select>
+                    </div>
+                      <button class="btn btn-md btn-primary" type="submit">Buscar</button>
+                  </form>
+                </div>
               </div>
-              <h3>Resultados</h3>
               <div class="row">
                   <!-- individual search result -->
                   <div class="col-xs-12 col-sm-6 col-md-4" v-for="(post, index) in filteredPosts" v-bind:key="index">
@@ -63,7 +66,8 @@ export default {
       }
   },
   methods: {
-    searchPosts: function (){
+    searchPosts: function (e){
+      e.preventDefault()
       let filtered_posts = []
       filtered_posts = this.posts.filter(post => {
         return post.title.rendered.toLowerCase().includes(this.search.toLowerCase())
@@ -78,7 +82,7 @@ export default {
       this.filteredPosts = filtered_posts
     },
     getList: function () {
-      axios.get('http://www.mujeresdeoro.co/wp-json/wp/v2/books?per_page=9&order=desc')
+      axios.get('http://www.mujeresdeoro.co/wp-json/wp/v2/books?per_page=6&order=desc')
         .then((response) => {
           this.posts= this.filteredPosts = response.data
            // eslint-disable-next-line 
@@ -159,5 +163,10 @@ section .section-title {
 .frontside .card .card-body img {
     width: 120px;
     height: 120px;
+}
+@media only screen and (min-width: 700px) {
+#search-form .form-group {
+  margin-right: 10px;
+}
 }
 </style>
