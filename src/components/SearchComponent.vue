@@ -1,8 +1,8 @@
 <template>
   <section class="container">
     <div class="row">
-      <section id="results" class="pb-5">
-          <div class="container display-flex">
+      <section id="results" class="pb-5 display-flex">
+          <div class="container">
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                   <form class="form-inline" id="search-form" @submit="searchPosts">
