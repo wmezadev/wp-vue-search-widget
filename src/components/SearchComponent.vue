@@ -1,34 +1,35 @@
 <template>
   <section class="container">
     <div class="row">
-        <div class="col col-md-4">
-          <input class="form-control" v-model="search"  type="text" name="search" placeholder="Búsqueda">
-        </div>
-        <div class="col col-md-4">
-          <select class="form-control" name="category">
-            <option value=""> Una opción </option>
-          </select>
-        </div>
-        <div class="col col-md-4">
-          <button class="btn btn-primary">Buscar</button>
-        </div>
-    </div>
-    <div class="row">
       <section id="results" class="pb-5">
           <div class="container display-flex">
+              <div class="row">
+                  <div class="col col-md-4">
+                    <input class="form-control" v-model="search"  type="text" name="search" placeholder="Búsqueda por titulo">
+                  </div>
+                  <div class="col col-md-4">
+                    <select class="form-control" name="category" v-model="category">
+                      <option value="" disabled selected>  Categoría </option>
+                      <option v-for="category in categories" v-bind:key="category.id" v-bind:value="category.id">{{category.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col col-md-4 text-center">
+                    <button class="btn btn-md btn-primary" @click="searchPosts()">Buscar</button>
+                  </div>
+              </div>
               <h3>Resultados</h3>
               <div class="row">
                   <!-- individual search result -->
-                  <div class="col-xs-12 col-sm-6 col-md-4" v-for="(post, index) in filteredList" v-bind:key="index">
+                  <div class="col-xs-12 col-sm-6 col-md-4" v-for="(post, index) in filteredPosts" v-bind:key="index">
                       <div class="image-flip">
                           <div class="mainflip">
                               <div class="frontside">
                                   <div class="card">
                                       <div class="card-body text-center">
-                                          <p><img class=" img-fluid" v-bind:src="post.img" alt="card image"></p>
-                                          <h4 class="card-title">{{ post.title }}</h4>
-                                          <p class="card-text">{{ post.author }}</p>
-                                          <a v-bind:href="post.link" target="_blank" class="btn btn-primary btn-md">Descargar <i class="fa fa-download"></i></a>
+                                          <p><img class=" img-fluid" v-bind:src="post.fimg_url" alt="card image"></p>
+                                          <h4 class="card-title">{{ post.title.rendered }}</h4>
+                                          <p class="card-text">{{ post.description }}</p>
+                                          <a v-bind:href="post.download_url" target="_blank" class="btn btn-primary btn-md" download>Descargar <i class="fa fa-download"></i></a>
                                       </div>
                                   </div>
                               </div>
@@ -45,14 +46,8 @@
 </template>
 
 <script>
-class Post {
-  constructor(title, link, author, img) {
-    this.title = title;
-    this.link = link;
-    this.author = author;
-    this.img = img;
-  }
-}
+import axios from 'axios'
+
 export default {
   name: 'search-component',
   props: {
@@ -61,70 +56,45 @@ export default {
   data: function () {
     return { 
         search: '',
-        postList : [
-          new Post(
-            'Vue.js', 
-            'https://vuejs.org/', 
-            'Chris', 
-            'https://vuejs.org//images/logo.png'
-          ),
-          new Post(
-            'React.js', 
-            'https://facebook.github.io/react/', 
-            'Tim',
-            'https://daynin.github.io/clojurescript-presentation/img/react-logo.png'
-          ),
-          new Post(
-            'Angular.js', 
-            'https://angularjs.org/', 
-            'Sam', 
-            'https://angularjs.org/img/ng-logo.png'
-          ),
-          new Post(
-            'Ember.js', 
-            'http://emberjs.com/', 
-            'Rachel',
-            'http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=200'
-          ),
-          new Post(
-            'Meteor.js', 
-            'https://www.meteor.com/', 
-            'Chris', 
-            'http://hacktivist.in/introduction-to-nodejs-mongodb-meteor/img/meteor.png'
-          ),
-          new Post(
-            'Aurelia', 
-            'http://aurelia.io/', 
-            'Tim',
-            'https://cdn.auth0.com/blog/aurelia-logo.png'
-          ),
-          new Post(
-            'Node.js', 
-            'https://nodejs.org/en/', 
-            'A. A. Ron',
-            'https://code-maven.com/img/node.png'
-          ),
-          new Post(
-            'Pusher', 
-            'https://pusher.com/', 
-            'Alex', 
-            'https://avatars1.githubusercontent.com/u/739550?v=3&s=400'
-          ),
-          new Post(
-            'Feathers.js', 
-            'http://feathersjs.com/', 
-            'Chuck',
-            'https://cdn.worldvectorlogo.com/logos/feathersjs.svg'
-          )
-        ]
+        posts: [],
+        filteredPosts: [],
+        categories: [],
+        category: null
       }
   },
-  computed: {
-    filteredList() {
-      return this.postList.filter(post => {
-        return post.title.toLowerCase().includes(this.search.toLowerCase())
+  methods: {
+    searchPosts: function (){
+      let filtered_posts = []
+      filtered_posts = this.posts.filter(post => {
+        return post.title.rendered.toLowerCase().includes(this.search.toLowerCase())
       })
+      if(this.category){
+        filtered_posts = filtered_posts.filter(post => {
+          return post.categoria_libro.find(categoria => {
+              return parseInt(categoria) === parseInt(this.category)
+            })
+        })
+      }
+      this.filteredPosts = filtered_posts
+    },
+    getList: function () {
+      axios.get('http://www.mujeresdeoro.co/wp-json/wp/v2/books?per_page=9&order=desc')
+        .then((response) => {
+          this.posts= this.filteredPosts = response.data
+           // eslint-disable-next-line 
+          console.log(response.data)
+        })
+    },
+    getCategories: function () {
+      axios.get('http://www.mujeresdeoro.co/wp-json/wp/v2/categoria_libro?context=embed')
+        .then((response) => {
+          this.categories = response.data
+        })
     }
+  },
+  mounted: function (){
+    this.getCategories()
+    this.getList()
   }
 }
 </script>
@@ -180,16 +150,6 @@ section .section-title {
     margin: 10% 5%;
 }
 
-
-.frontside .card,
-.backside .card {
-    min-height: 312px;
-}
-
-.backside .card a {
-    font-size: 18px;
-    color: #e36334 !important;
-}
 
 .frontside .card .card-title,
 .backside .card .card-title {
