@@ -84,7 +84,7 @@ export default {
   methods: {
     getList: function () {
       this.loading = true
-      axios.get(`http://www.mujeresdeoro.co/wp-json/wp/v2/books?per_page=9&order=desc&search=${this.searchURI}&categoria_libro=${this.category}&page=${this.currentPage}`)
+      axios.get(`/wp-json/wp/v2/books?per_page=9&order=desc&search=${this.searchURI}&categoria_libro=${this.category}&page=${this.currentPage}`)
         .then((response) => {
           this.posts = response.data
           this.pages = response.headers['x-wp-totalpages']
@@ -92,7 +92,7 @@ export default {
         })
     },
     getCategories: function () {
-      axios.get('http://www.mujeresdeoro.co/wp-json/wp/v2/categoria_libro?context=embed')
+      axios.get('/wp-json/wp/v2/categoria_libro?context=embed')
         .then((response) => {
           this.categories = response.data
         })
@@ -161,7 +161,7 @@ section .section-title {
 }
 
 .card-body {
-    height: 300px;
+    min-height: 300px;
 }
 .frontside .card .card-title{
     color: #e36334 !important;
